@@ -3,28 +3,29 @@
 #include <iostream>
 using namespace std;
 
-class Stack
+class StackBasedOnArray
 {
 public:
-    Stack(); // конструктор инициализации
-    Stack(const Stack& other);  // конструктор копирования
-    Stack(Stack&& other); // конструктор перемещения
-    ~Stack(); // деструктор
+
+    StackBasedOnArray(int _MAX_size); // конструктор инициализации
+    StackBasedOnArray(const StackBasedOnArray& other);  // конструктор копирования
+    StackBasedOnArray(StackBasedOnArray&& other); // конструктор перемещения
+    ~StackBasedOnArray(); // деструктор
     
     //Обязательные функции-члены
     int GetSize() const; // вернуть длину стека
-    void Push(const int& element); // функции вставки и удаления элемента
+    void Push(const &element); // функции вставки и удаления элемента
     int Pop(); // удалить элемент из стека
     int Peek(); // просмотреть элементы стека
 
-    Stack &operator=(const Stack& other); // оператор присваивания копий
-    Stack &operator=(Stack&& other); // оператор присваивания перемещения
-    friend ostream& operator<<(ostream& stream, const Stack& value);
-    void printArray(); // вывод массива
-
+    StackBasedOnArray &operator=(const StackBasedOnArray& other); // оператор присваивания копий
+    StackBasedOnArray &operator=(StackBasedOnArray&& other); // оператор присваивания перемещения
+    friend ostream& operator<<(ostream& stream, const StackBasedOnArray& value);
+    int operator[](const &index) const;//Перегрузка оператора индексации
+    void printArray() const; // вывод массива
 
 private:
-    int *arr; // указатель на стек
-    int size; // максимальное количество элементов в стеке 
+    int *arr;// указатель на стек
+    int size, MAX_size;//номер текущего элемента стека и максимальное количество элементов в стеке 
 };
 

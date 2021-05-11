@@ -3,37 +3,30 @@
 
 // конструктор инициализации
 template<typename T>
-StackT<T>::StackT()
-{
-	this->size=0;
-	this->arr=nullptr;
-}
-
+StackBasedOnArrayT<T>::StackBasedOnArrayT(int _MAX_size) : MAX_size(_MAX_size), size(0) {arr=new int[MAX_size];} 
 
 // конструктор копирования
 template<typename T>
-StackT<T>::StackT(const StackT& other)
+StackBasedOnArrayT<T>::StackBasedOnArrayT(const StackBasedOnArrayT& other)
 {
-	arr = new int[other.size];
-	size = other.size;
-	for (int i = 0; i < size; ++i)
+    arr = new int[other.MAX_size];
+	MAX_size = other.MAX_size;
+	for (int i = 0; i < MAX_size; ++i)
 	  arr[i] = other.arr[i];
+  
 }
 
 
 // конструктор перемещения
 template<typename T>
-StackT<T>::StackT(StackT&& other)
+StackBasedOnArrayT<T>::StackBasedOnArrayT(StackBasedOnArrayT&& other): arr(other.arr)
 {
-	arr = other.arr;
-	size = other.size;
 	other.arr = nullptr;
 }
 
-
 // деструктор
 template<typename T>
-StackT<T>::~StackT()
+StackBasedOnArrayT<T>::~StackBasedOnArrayT()
 {
 	delete[] arr;
 }
@@ -41,7 +34,7 @@ StackT<T>::~StackT()
 
 // вернуть длину стека
 template<typename T>
-int StackT<T>::GetSize() const
+int StackBasedOnArrayT<T>::GetSize() const
 {
 	return size;
 }
@@ -49,62 +42,46 @@ int StackT<T>::GetSize() const
 // функции вставки и удаления элемента
 // вставить элемент
 template<typename T>
-void StackT<T>::Push(const T& element)
+void StackBasedOnArrayT<T>::Push(const T& element)
 {
-int* arr1 = new int[size + 1];
-
-	for (int before = 0; before < size; ++before) arr1[before] = arr[before];
-
-	arr1[size] = element;
-
-	for (int after = size; after < size; ++after) arr1[after + 1] = arr[after];
-
-	delete[] arr;
-	arr = arr1;
-	++size;
+ if (size+1<= MAX_size) { arr[++size] = element;}
+        else {cout << "StackBasedOnArray is full";}
 }
 // удалить элемент
 template <typename T>
-T StackT<T>::Pop()
+T StackBasedOnArrayT<T>::Pop()
 {
-	if (size > 0)
-	{
-		--size;
-		int* arr1 = new int[size];
-		for (int i = 0; i < size; ++i)
-			arr1[i] = arr[i];
-
-		delete[] arr;
-		arr = arr1;
-     return arr[size];
-	}
-	else 
-	{
-		cout << "element not found";
-		arr = 0;
-		return arr[size];
-    }
-	
+	 if (size != 0) {return arr[size--];}
+		else 
+		{
+		    cout << "element not found";
+			return (0);
+		}
 }
 
 
 // просмотреть элементы стека
 template<typename T>
-T StackT<T>::Peek() 
+T StackBasedOnArrayT<T>::Peek()
 {	
-    return arr[size - 1];
+    if (size != 0) {return arr[size];}
+        else 
+		{
+		    cout << "StackBasedOnArray is full";
+			return (0);
+		}
 }
 
 
 // оператор присваивания копий
 template<typename T>
-StackT<T>&StackT<T>::operator=(const StackT& other)
+StackBasedOnArrayT<T>&StackBasedOnArrayT<T>::operator=(const StackBasedOnArrayT& other)
 {
 	if (this == &other) return *this;
 	delete[] arr;
-	arr = new int[other.size];
-	size = other.size;
-	for (int i = 0; i < size; ++i)
+	arr = new int[other.MAX_size];
+	MAX_size = other.MAX_size;
+	for (int i = 0; i < MAX_size; ++i)
 		arr[i] = other.arr[i];
 	return *this;
 }
@@ -112,11 +89,33 @@ StackT<T>&StackT<T>::operator=(const StackT& other)
 
 //оператор присваивания перемещения
 template<typename T>
-StackT<T>&StackT<T>::operator=(StackT&& other)
+StackBasedOnArrayT<T>&StackBasedOnArrayT<T>::operator=(StackBasedOnArrayT&& other)
 {
 	if (this == &other)  return *this;
 	delete[] arr;
 	arr = other.arr;
-	size = other.size;
+	MAX_size = other.MAX_size;
 	other.arr = nullptr;
+	return *this;
+}
+
+//Перегрузка оператора индексации
+template<typename T>
+int StackBasedOnArrayT<T>::operator[](const &index) const
+{
+    return arr[index];
+}
+
+// вывод массива
+template<typename T>
+void StackBasedOnArrayT<T>::printArray() const
+{
+	std:: cout << "\nStackBasedOnArray size: " << MAX_size << std::endl;
+	for (int i = 0; i < MAX_size; i++)
+	{ 
+	    std::cout << "Used: " << i << std::endl;
+		std::cout << "Next: " << arr[i+1] << std::endl;
+		std::cout << "--------" << std::endl;
+	}
+
 }

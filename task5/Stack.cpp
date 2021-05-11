@@ -1,121 +1,118 @@
 #include "Stack.h"
 
 // конструктор инициализации
-Stack::Stack()
-{
-	this->size=0;
-	this->arr=nullptr;
-}
+StackBasedOnArray::StackBasedOnArray(int _MAX_size) : MAX_size(_MAX_size), size(0) {arr=new int[MAX_size];} 
 
 
 // конструктор копирования
-Stack::Stack(const Stack& other)
+StackBasedOnArray::StackBasedOnArray(const StackBasedOnArray& other)
 {
-	arr = new int[other.size];
-	size = other.size;
-	for (int i = 0; i < size; ++i)
+	arr = new int[other.MAX_size];
+	MAX_size = other.MAX_size;
+	for (int i = 0; i < MAX_size; ++i)
 	  arr[i] = other.arr[i];
 }
 
 
 // конструктор перемещения
-Stack::Stack(Stack&& other)
+StackBasedOnArray::StackBasedOnArray(StackBasedOnArray&& other): arr(other.arr)
 {
-	arr = other.arr;
-	size = other.size;
 	other.arr = nullptr;
 }
 
 
 // деструктор
-Stack::~Stack()
+StackBasedOnArray::~StackBasedOnArray()
 {
 	delete[] arr;
 }
 
 
 // вернуть длину стека
-int Stack::GetSize() const
+int StackBasedOnArray::GetSize() const
 {
 	return size;
 }
 
 // функции вставки и удаления элемента
 // вставить элемент
-void Stack::Push(const int& element)
-{
-int* arr1 = new int[size + 1];
+void StackBasedOnArray::Push(const &element)
+{ 
+        if (size+1<= MAX_size) { arr[++size] = element;}
+        else {cout << "StackBasedOnArray is full";}
 
-	for (int before = 0; before < size; ++before) arr1[before] = arr[before];
-
-	arr1[size] = element;
-
-	for (int after = size; after < size; ++after) arr1[after + 1] = arr[after];
-
-	delete[] arr;
-	arr = arr1;
-	++size;
 }
 // удалить элемент
-int Stack::Pop()
+int StackBasedOnArray::Pop()
 {
-	if (size > 0)
-	{
-		--size;
-		int *arr1 = new int[size];
-		for (int i = 0; i < size; ++i)
-			arr1[i] = arr[i];
-
-		delete[] arr;
-		arr = arr1;
-        return arr[size];
-	}
-	else 
-	{
-		cout << "element not found";
-		arr = 0;
-		return arr[size];
-    }
+        if (size != 0) {return arr[size--];}
+		else 
+		{
+		    cout << "element not found";
+			return (0);
+		}
 }
-
 
 
 // просмотреть элементы стека
-int Stack::Peek() 
+int StackBasedOnArray::Peek() 
 {	
-		return arr[size];
+        if (size != 0) {return arr[size];}
+        else 
+		{
+		    cout << "StackBasedOnArray is full";
+			return (0);
+		}
 }
 
 
 // оператор присваивания копий
-Stack& Stack::operator=(const Stack& other)
+StackBasedOnArray& StackBasedOnArray::operator=(const StackBasedOnArray& other)
 {
 	if (this == &other) return *this;
 	delete[] arr;
-	arr = new int[other.size];
-	size = other.size;
-	for (int i = 0; i < size; ++i)
+	arr = new int[other.MAX_size];
+	MAX_size = other.MAX_size;
+	for (int i = 0; i < MAX_size; ++i)
 		arr[i] = other.arr[i];
 	return *this;
 }
 
 
 //оператор присваивания перемещения
-Stack& Stack::operator=(Stack&& other)
+StackBasedOnArray& StackBasedOnArray::operator=(StackBasedOnArray&& other)
 {
 	if (this == &other)  return *this;
 	delete[] arr;
 	arr = other.arr;
-	size = other.size;
+	MAX_size = other.MAX_size;
 	other.arr = nullptr;
 	return *this;
 }
 
 
-ostream &operator<<(ostream &stream, const Stack &value)
+ostream &operator<<(ostream &stream, const StackBasedOnArray &value)
 {
 	for (int i = 0; i <= value.size; ++i)
 		cout << value.arr[i] << " ";
 	return stream;
 }
 
+//Перегрузка оператора индексации
+int StackBasedOnArray::operator[](const &index) const
+{
+    return arr[index];
+}
+
+// вывод массива
+void StackBasedOnArray::printArray() const
+{
+	std:: cout << "\nStack size: " << MAX_size << std::endl;
+	for (int i = 0; i < MAX_size; i++)
+	{ 
+	    std::cout << "Used: " << i << std::endl;
+		std::cout << "Next: " << arr[i+1] << std::endl;
+		std::cout << "--------" << std::endl;
+	}
+
+}
